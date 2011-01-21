@@ -1,0 +1,82 @@
+[general]
+# This should contain a space delimited list of all identifiers of the accounts
+# that are to be synced
+accounts = user@domain1.com, user@domain2.com, user@domain3.com
+pythonfile = ~/.utf7.py
+maxsyncaccounts = 3
+socktimeout = 60
+ui = TTY.TTYUI
+
+[Account user@domain1.com]
+# The identifier for the local repository; i.e., the maildir that offlineimap
+# will sync with an IMAP server
+localrepository = user@domain1.com-local
+# The identifier for the remote repository. This is the actual IMAP, which is
+# usually foreign to the system
+remoterepository = user@domain1.com-remote
+
+[Repository user@domain1.com-local]
+# Currently, offlineimap only supports maildir and IMAP for local repositories
+type = Maildir
+# Where should the mail be placed?
+localfolders = ~/Mail/user@domain1.com
+
+[Repository user@domain1.com-remote]
+# Remote repos can be IMAP or Gmail, the latter being a preconfigured IMAP
+type = IMAP
+remotehost = imap.gmail.com
+remoteuser = user@domain1.com
+remotepass = Password
+ssl = yes
+realdelete = no
+nametrans = lambda foldername: re.sub ('^\[Gmail\]', '',
+                               re.sub ('Sent\ Mail', 'Sent',
+                               re.sub ('Starred', 'Flagged', foldername)))
+nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
+folderfilter = lambda foldername: foldername not in '[Gmail]/All Mail'
+
+[Account user@domain2.com]
+localrepository = user@domain2.com-local
+remoterepository = user@domain2.com-remote
+
+[Repository user@domain2.com-local]
+# Currently, offlineimap only supports maildir and IMAP for local repositories
+type = Maildir
+# Where should the mail be placed?
+localfolders = ~/Mail/user@domain2.com
+
+[Repository user@domain2.com-remote]
+type = IMAP
+remotehost = imap.gmail.com
+remoteuser = user@domain2.com
+remotepass = Password
+ssl = yes
+realdelete = no
+nametrans = lambda foldername: re.sub ('^\[Gmail\]', '',
+                               re.sub ('Sent\ Mail', 'Sent',
+                               re.sub ('Starred', 'Flagged', foldername)))
+nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
+folderfilter = lambda foldername: foldername not in '[Gmail]/All Mail'
+
+[Account user@domain3.com]
+localrepository = user@domain3.com-local
+remoterepository = user@domain3.com-remote
+
+[Repository user@domain3.com-local]
+# Currently, offlineimap only supports maildir and IMAP for local repositories
+type = Maildir
+# Where should the mail be placed?
+localfolders = ~/Mail/user@domain3.com
+
+[Repository user@domain3.com-remote]
+type = IMAP
+remotehost = imap.gmail.com
+remoteuser = user@domain3.com
+remotepass = Password
+ssl = yes
+realdelete = no
+nametrans = lambda foldername: re.sub ('^\[Gmail\]', '',
+                               re.sub ('Sent\ Mail', 'Sent',
+                               re.sub ('Starred', 'Flagged', foldername)))
+nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
+folderfilter = lambda foldername: foldername not in '[Gmail]/All Mail'
