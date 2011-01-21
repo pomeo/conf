@@ -1,0 +1,56 @@
+set username = user@domain.com
+set password = password
+set server = talk.google.com
+set jid =  user@domain.com
+set ssl = 1
+set ssl_ignore_checks = 0
+set logging = 1
+set load_logs = 1
+set logging_dir = ~/.mcabber/histo/
+set statefile = ~/.mcabber/mcabber.state
+set spell_enable = 1
+set spell_lang = ru_RU
+set spell_encoding = UTF-8
+# Alt-v начать многострочное сообщение
+bind M118 = msay toggle
+# что бы и в русской раскладки работало, т.е. Alt-м
+bind MU1084 = msay toggle
+# и по Alt-Enter отправляем сообщение (По-умолчанию работает Ctrl-d)
+bind M13 = msay send
+
+#set pgp = 1
+#set pgp_private_key = "xxxxxxxxxxxxxxxx"
+
+set fifo_name = ~/.mcabber/mcabber.fifo
+set fifo_hide_commands = 0
+set fifo_ignore = 0
+
+set autoaway = 600
+
+module load pep
+module load avatar
+module load geoloc
+module load urlopen
+module load tune
+module load mpd
+module load extsay
+
+set extsay_script_path = ~/.mcabber/extsay.sh
+
+set avatar_directory = ~/.mcabber/avatars
+set avatar_font_height = 16
+set avatar_font_width  = 8
+set avatar_background = 255
+
+set geoloc_interval = 5
+
+set tune_interval = 10
+
+#set extsay_split_win = 1
+#set extsay_win_height = 200
+
+set url_regex = "(((https?|ftps?|nntp)://)|www[.][-a-z0-9.]+|(mailto:|news:))(%[0-9A-F]{2}|[-_.!~*';/?:@&=+$,#[:alnum:]])+"
+#set url_handler = ~/.mcabber/urlcmd.sh
+set url_handler = chromium-browser
+
+alias open = url open
