@@ -1,0 +1,22 @@
+source ~/.mutt/defaults.global
+
+set folder = $HOME/Mail/user@domain2.com
+set spoolfile="+INBOX"
+set trash = "+[Gmail].Spam"
+set postponed = "+[Gmail].Drafts"
+set record = "+[Gmail].Sent\ Mail"
+set header_cache = "~/.mutt/cache/headers2"
+set message_cachedir = "~/.mutt/cache/bodies2"
+set certificate_file = "~/.mutt/certificate2"
+
+set smtp_pass = Password
+set smtp_url = "smtp://user@domain2.com@smtp.gmail.com:587/"
+set from = "user@domain2.com"
+set realname = "User Name"
+
+# muttng sidebar stuff
+ set sidebar_delim       = '|'
+ set sidebar_visible     = yes
+ set sidebar_width       = 25
+ mailboxes =INBOX =Android =Debian =Free-lance =Google\ Groups =Nanoc =Nginx =Sinatra =Tornado
+

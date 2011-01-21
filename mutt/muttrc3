@@ -1,0 +1,12 @@
+source ~/.mutt/defaults.global
+
+set folder = $HOME/Mail/user@domain3.com
+set spoolfile="+INBOX"
+set trash = "+[Gmail].Spam"
+set postponed = "+[Gmail].Drafts"
+set record = "+[Gmail].Sent\ Mail"
+set header_cache = "~/.mutt/cache/headers3"
+set message_cachedir = "~/.mutt/cache/bodies3"
+set certificate_file = "~/.mutt/certificate3"
+
+set sidebar_visible     = no

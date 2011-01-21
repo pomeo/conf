@@ -1,0 +1,42 @@
+source ~/.mutt/defaults.global
+
+set folder = $HOME/Mail/user@domain1.com
+set spoolfile = "+INBOX"
+set trash = "+[Gmail].Spam"
+set postponed = "+[Gmail].Drafts"
+set record = "+[Gmail].Sent\ Mail"
+set header_cache = "~/.mutt/cache/headers1"
+set message_cachedir = "~/.mutt/cache/bodies1"
+set certificate_file = "~/.mutt/certificate1"
+
+set query_command = "goobook query '%s'"
+bind editor <Tab> complete-query
+
+set sidebar_visible     = no
+
+set smtp_pass = Password
+set smtp_url = "smtp://user@domain1.com@smtp.gmail.com:587/"
+set from = "user@domain1.com"
+set realname = "User Name"
+
+# gpg stuff
+# automatically sign outgoing mail
+set pgp_autosign = yes
+# half hour timeout
+set pgp_timeout = 1800
+# always verify sigs
+set pgp_verify_sig = yes
+# unset this crap, stop doing it!
+unset crypt_autosmime
+
+set pgp_replysign
+set pgp_replyencrypt
+set pgp_replysignencrypted
+
+set pgp_verify_sig
+
+source ~/.mutt/gpg.rc
+
+pgp-hook keyserver.ubuntu.com:11371 0x00000000
+
+#set signature='~/.mutt/
