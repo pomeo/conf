@@ -1,0 +1,519 @@
+;; Define the load path
+(setq load-path (cons "~/Dropbox/emacs/.emacs.d/" load-path))
+
+;; Turn off the toolbar
+(tool-bar-mode -1)
+;;
+;; Turn off the menu bar
+(menu-bar-mode -1)
+;;
+;; Turn off the scrollbar
+(scroll-bar-mode -1)
+;}}}
+
+;; Show column number in modeline
+(setq column-number-mode t)
+
+;; Modeline setup
+;;   - somewhat cleaner than default
+(setq default-mode-line-format
+      '("-"
+       mode-line-mule-info
+       mode-line-modified
+       mode-line-frame-identification
+       mode-line-buffer-identification
+       "  "
+       global-mode-string
+       "   %[(" mode-name mode-line-process minor-mode-alist "%n"")%]--"
+       (line-number-mode "L%l--")
+       (column-number-mode "C%c--")
+       (-3 . "%p")
+       "-%-")
+)
+
+;; Always flash for parens and define a more distinctive color
+(show-paren-mode 1)
+;;(set-face-foreground 'show-paren-match-face "#bc8383")
+
+;; Answer y or n instead of yes or no at prompts
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;{{{ General settings
+;
+;; Provide an error trace if loading .emacs fails
+;;(setq debug-on-error t)
+
+;; Encoding
+;;(prefer-coding-system 'utf-8)
+;;(set-language-environment 'utf-8)
+;;(setq locale-coding-system 'utf-8)
+;;(set-terminal-coding-system 'utf-8)
+;;(set-keyboard-coding-system 'utf-8)
+;;(set-selection-coding-system 'utf-8)
+(setq file-name-coding-system 'utf-8)
+
+;; Spell checking
+(setq-default ispell-program-name "aspell"
+  ispell-extra-args '("--sug-mode=ultra"))
+(setq-default ispell-dictionary "en_US")
+
+;; Default Web Browser
+(setq browse-url-browser-function 'browse-url-firefox)
+
+;; Show unfinished keystrokes early
+;;(setq echo-keystrokes 0.1)
+
+;; Ignore case on completion
+;;(setq completion-ignore-case t
+;;  read-file-name-completion-ignore-case t)
+
+
+;; Save after a certain amount of time.
+(setq auto-save-timeout 1800)
+;;
+;; Change backup behavior to save in a specified directory
+(setq backup-directory-alist '(("." . "~/Dropbox/emacs/.emacs.d/saves/"))
+ backup-by-copying      t
+ version-control        t
+ delete-old-versions    t
+ kept-new-versions      6
+ kept-old-versions      2
+)
+
+;; Keep bookmarks in the load path
+(setq bookmark-default-file "~/Dropbox/emacs/.emacs.d/emacs-bookmarks")
+
+;; Keep abbreviations in the load path
+(setq abbrev-file-name "~/Dropbox/emacs/.emacs.d/emacs-abbrev-defs")
+
+;{{{ Mouse and cursor settings
+;
+;; Enable mouse scrolling
+;;(mouse-wheel-mode t)
+
+;; Push the mouse out of the way on cursor approach
+;;(mouse-avoidance-mode 'jump)
+
+;; Stop cursor from blinking
+;;(blink-cursor-mode nil)
+
+;; Accelerate the cursor when scrolling
+;;(load "accel" t t)
+;;
+;; Start scrolling when 2 lines from top/bottom
+(setq scroll-margin 5)
+;;
+;; Fix the scrolling on jumps between windows
+(setq scroll-conservatively 5)
+
+;; Cursor in same relative row and column during PgUP/DN
+(setq scroll-preserve-screen-position t)
+
+
+;; Always paste at the cursor
+;;(setq mouse-yank-at-point t)
+
+;; Kill (and paste) text from read-only buffers
+;;(setq kill-read-only-ok 1)
+
+;; Partially integrate the kill-ring and X cut-buffer
+;(setq x-select-enable-clipboard t)
+
+;; Copy/paste with accentuation intact
+;;(setq selection-coding-system 'compound-text-with-extensions)
+
+;; Delete selection on a key press
+;;(delete-selection-mode t)
+;}}}
+;}}}
+
+;; SCPaste (scp pastebin)
+;;   - http://www.emacswiki.org/cgi-bin/wiki/SCPaste
+(autoload 'scpaste "scpaste" "Paste the current buffer." t nil)
+
+;{{{ Reload or edit .emacs on the fly
+;    - key bindings defined below
+;
+(defun aic-reload-dot-emacs ()
+  "Reload user configuration from .emacs"
+  (interactive)
+  ;; Fails on killing the Messages buffer, workaround:
+  (get-buffer-create "*Messages*")
+  (load-file "~/.emacs")
+)
+(defun aic-edit-dot-emacs ()
+  "Edit user configuration in .emacs"
+  (interactive)
+  (find-file "~/.emacs")
+)
+;}}}
+
+;{{{ Kill all buffers except scratch
+;
+(defun aic-nuke-all-buffers ()
+  "Kill all buffers, leaving *scratch* only."
+  (interactive)
+  (mapcar (lambda (x) (kill-buffer x)) (buffer-list))
+  (delete-other-windows)
+)
+;}}}
+
+(defalias 'nuke          'aic-nuke-all-buffers)
+
+;; Reload or edit .emacs as defined above
+(global-set-key "\C-c\C-r" 'aic-reload-dot-emacs)
+(global-set-key "\C-c\C-e" 'aic-edit-dot-emacs)
+
+(desktop-save-mode t) ;;сохранять открытые файлы при закрытии
+
+(add-to-list 'load-path
+                "~/Dropbox/emacs/.emacs.d/yasnippet-0.6.1c") ;;сниппеты
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/Dropbox/emacs/.emacs.d/yasnippet-0.6.1c/snippets")
+(global-set-key (kbd "s-z") 'yas/expand)
+
+(require 'auto-complete) ;;автодопление
+(global-auto-complete-mode t)
+(define-key ac-complete-mode-map "\t" 'ac-complete)
+
+;;(delete-selection-mode 1) ;;удаление региона
+
+(setq x-select-enable-clipboard t) ;;искравление косяков с буфером
+(setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
+
+(load "~/Dropbox/emacs/.emacs.d/nxhtml/autostart.el") ;;nxhtml и куча дополнений с ним
+(fset 'xml-mode 'nxhtml-mode)
+(fset 'html-mode 'nxhtml-mode)
+
+(setq load-path (cons "~/Dropbox/emacs/.emacs.d/org-7.01h/lisp" load-path))
+(require 'org-install)
+;; The following lines are always needed.  Choose your own keys.
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+;; The following lines are always needed.  Choose your own keys.
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+(global-font-lock-mode 1)                     ; for all buffers
+(add-hook 'org-mode-hook 'turn-on-font-lock)  ; Org buffers only
+
+;; Settings
+(setq org-directory "~/Dropbox/Org/")
+;; Misc
+(setq org-log-done t)
+(setq org-completion-use-ido t)
+(setq org-return-follows-link t)
+
+;; Files that are included in org-mode agenda
+(setq org-agenda-files
+ (list "~/Dropbox/Org/tasks.org")
+)
+
+(setq org-combined-agenda-icalendar-file "~/Dropbox/Org/org.ics")
+(org-export-icalendar-combine-agenda-files)
+
+(add-to-list 'load-path "~/Dropbox/emacs/.emacs.d/remember")
+(require 'remember)
+(org-remember-insinuate)
+;; Notes file
+(setq org-default-notes-file (concat org-directory "~/Dropbox/Org/notes.org"))
+;; Notes templates
+(setq org-remember-templates
+ '(("Note" ?n   "* NOTE %?\n %i\n %a" "~/Dropbox/Org/notes.org" "Notes")
+   ("Download" ?d "* DL %?\n %i\n %a" "~/Dropbox/Org/download.org" "Download")
+   ("Music" ?m "* MUSIC %?\n %i\n %a" "~/Dropbox/Org/music.org" "Music")
+   ("Idea" ?i "* %^{Title}\n %i\n %a" "~/Dropbox/Org/brainstorm.org" "Brainstorm")))
+
+;; Remember frames
+;;   - $ emacsclient -e '(make-remember-frame)'
+;;
+;; Org-remember splits windows, force it to a single window
+(add-hook 'remember-mode-hook  'delete-other-windows)
+
+;; Automatic closing of remember frames
+(defadvice remember-finalize (after delete-remember-frame activate)
+  "Advise remember-finalize to close the frame if it is the remember frame"
+  (if (equal "*Remember*" (frame-parameter nil 'name))
+    (delete-frame))
+)
+(defadvice remember-destroy (after delete-remember-frame activate)
+  "Advise remember-destroy to close the frame if it is the remember frame"
+  (if (equal "*Remember*" (frame-parameter nil 'name))
+    (delete-frame))
+)
+
+;; Initialization of remember frames
+(defun make-remember-frame ()
+  "Create a new frame and run org-remember"
+  (interactive)  
+  (make-frame '((name . "*Remember*") (width . 80) (height . 10)))
+  (select-frame-by-name "*Remember*")
+  (org-remember)
+)
+;}}}
+
+;; update agenda file after changes to org files
+(defun th-org-mode-init ()
+  (add-hook 'after-save-hook 'th-org-update-agenda-file t t))
+
+(add-hook 'org-mode-hook 'th-org-mode-init)
+
+;; that's the export function
+(defun th-org-update-agenda-file (&optional force)
+  (interactive)
+  (save-excursion
+    (save-window-excursion
+      (let ((file "/tmp/org-agenda.txt"))
+        (org-agenda-list)
+        (org-write-agenda file)))))
+
+;; do it once at startup
+(th-org-update-agenda-file t)
+
+;{{{ Calendar settings
+;
+(setq
+  holidays-in-diary-buffer               t
+  mark-holidays-in-calendar              t
+  all-christian-calendar-holidays        t
+  all-islamic-calendar-holidays        nil
+  all-hebrew-calendar-holidays         nil
+  european-calendar-style                t
+  ;display-time-24hr-format              t
+  display-time-day-and-date            nil
+  ;display-time-format                 nil
+  ;display-time-use-mail-icon          nil
+  calendar-latitude                  55.45
+  calendar-longitude                 37.36
+  calendar-location-name "Moscow, Russia"
+)
+;}}}
+
+(load "~/Dropbox/emacs/.emacs.d/javascript.elc")
+(add-to-list 'auto-mode-alist '("\\.js$" . javascript-mode))
+
+(require 'zencoding-mode)
+(add-hook 'nxhtml-mode-hook 'zencoding-mode) ;;zen-coding
+
+(autoload 'css-color-mode "css-color" "" t) ;;цвета в hex подсвечиваются своим цветом
+(add-hook 'css-mode-hook 'css-color-mode)
+
+(require 'bar-cursor)
+(bar-cursor-mode t) ;;тонкий курсор
+
+(setq scroll-step 1) ;;прокрутка по строке
+(global-hl-line-mode 1) ;;подсветка строки где стоит курсор
+;;(setq scroll-margin 5) ;;прокручивать буффер, когда до границы экрана 5 линий
+
+(windmove-default-keybindings 'meta)
+
+;;(set-default-font "DejaVu Sans Mono-11")
+;;(add-to-list 'default-frame-alist '(font. "DejaVu Sans Mono-11"))
+(set-default-font "Terminus-12")
+(add-to-list 'default-frame-alist '(font . "Terminus-12"))
+
+(fringe-mode 0)
+
+(setq default-tab-width 4)
+
+(global-set-key [?\C-,] 'previous-buffer) ;;предыдущий буфер
+(global-set-key [?\C-.] 'next-buffer) ;;следущющий буфер
+
+(define-key global-map (kbd "RET") 'newline-and-indent) ;;клавиша return, новая линия и отступ
+
+;;(require 'autopair)
+;;(autopair-global-mode) ;;автозакрытие скобок, кавычек и т.д.
+(add-to-list 'load-path "~/Dropbox/emacs/.emacs.d/emacs-textmate")
+(require 'textmate)
+(tm/initialize)
+
+(require 'multi-term)
+(setq multi-term-program "/bin/bash") ;;терминал в буфере
+(global-set-key (kbd "s-t") 'multi-term)
+
+; setting the PC keyboard's various keys to Super or Hyper.
+; This is tested on Lennart Borgman's Windows emacsw32 distro.
+; http://ourcomments.org/Emacs/EmacsW32Util.html
+(setq w32-pass-lwindow-to-system nil 
+      w32-pass-rwindow-to-system nil 
+      w32-pass-apps-to-system nil 
+      w32-lwindow-modifier 'super ;; Left Windows key 
+      w32-rwindow-modifier nil ;; Right Windows key 
+      w32-apps-modifier 'hyper) ;; Menu key
+
+(setq flymake-css-validator-jar "~/Dropbox/emacs/.emacs.d/css-validation/css-validator.jar")
+
+;;перезагружать firefox при сохранении файла
+(defun auto-reload-firefox-on-after-save-hook ()         
+          (add-hook 'after-save-hook
+                       '(lambda ()
+                          (interactive)
+                          (comint-send-string (inferior-moz-process)
+                                              "setTimeout(BrowserReload(), \"1000\");"))
+                       'append 'local)) ; buffer-local
+
+(add-hook 'nxhtml-mode-hook 'auto-reload-firefox-on-after-save-hook)
+(add-hook 'css-mode-hook 'auto-reload-firefox-on-after-save-hook)
+
+(autoload 'moz-minor-mode "moz" "Mozilla Minor and Inferior Mozilla Modes" t)
+
+(add-hook 'javascript-mode-hook 'javascript-custom-setup)
+(defun javascript-custom-setup ()
+  (moz-minor-mode 1))
+
+(add-hook 'after-init-hook ;;отключение дебагера
+          '(lambda () (setq debug-on-error nil)))
+
+;;
+;; Изменение размеров буферов в одном окне по кнопка alt-shift-стрелки
+;;
+(defun win-resize-top-or-bot ()
+"Figure out if the current window is on top, bottom or in the
+middle"
+(let* ((win-edges (window-edges))
+(this-window-y-min (nth 1 win-edges))
+(this-window-y-max (nth 3 win-edges))
+(fr-height (frame-height)))
+(cond
+((eq 0 this-window-y-min) "top")
+((eq (- fr-height 1) this-window-y-max) "bot")
+(t "mid"))))
+
+(defun win-resize-left-or-right ()
+"Figure out if the current window is to the left, right or in the
+middle"
+(let* ((win-edges (window-edges))
+(this-window-x-min (nth 0 win-edges))
+(this-window-x-max (nth 2 win-edges))
+(fr-width (frame-width)))
+(cond
+((eq 0 this-window-x-min) "left")
+((eq (+ fr-width 4) this-window-x-max) "right")
+(t "mid"))))
+
+(defun win-resize-enlarge-horiz ()
+(interactive)
+(cond
+((equal "top" (win-resize-top-or-bot)) (enlarge-window -1))
+((equal "bot" (win-resize-top-or-bot)) (enlarge-window 1))
+((equal "mid" (win-resize-top-or-bot)) (enlarge-window -1))
+(t (message "nil"))))
+
+(defun win-resize-minimize-horiz ()
+(interactive)
+(cond
+((equal "top" (win-resize-top-or-bot)) (enlarge-window 1))
+((equal "bot" (win-resize-top-or-bot)) (enlarge-window -1))
+((equal "mid" (win-resize-top-or-bot)) (enlarge-window 1))
+(t (message "nil"))))
+
+(defun win-resize-enlarge-vert ()
+(interactive)
+(cond
+((equal "left" (win-resize-left-or-right)) (enlarge-window-horizontally -1))
+((equal "right" (win-resize-left-or-right)) (enlarge-window-horizontally 1))
+((equal "mid" (win-resize-left-or-right)) (enlarge-window-horizontally -1))))
+
+(defun win-resize-minimize-vert ()
+(interactive)
+(cond
+((equal "left" (win-resize-left-or-right)) (enlarge-window-horizontally 1))
+((equal "right" (win-resize-left-or-right)) (enlarge-window-horizontally -1))
+((equal "mid" (win-resize-left-or-right)) (enlarge-window-horizontally 1))))
+
+(global-set-key [S-M-down] 'win-resize-mi2nimize-vert)
+(global-set-key [S-M-up] 'win-resize-enlarge-vert)
+(global-set-key [S-M-left] 'win-resize-minimize-horiz)
+(global-set-key [S-M-right] 'win-resize-enlarge-horiz)
+(global-set-key [S-M-up] 'win-resize-enlarge-horiz)
+(global-set-key [S-M-down] 'win-resize-minimize-horiz)
+(global-set-key [S-M-left] 'win-resize-enlarge-vert)
+(global-set-key [S-M-right] 'win-resize-minimize-vert)
+
+;;запуск макросов
+(global-set-key [f2] 'kmacro-call-macro)
+(global-set-key [f3] 'kmacro-start-macro-or-insert-counter)
+(global-set-key [f4] 'kmacro-end-or-call-macro)
+
+;; Interactively Do Things (highly recommended, but not strictly required)
+(require 'ido)
+(ido-mode t)
+
+;; fullscreen
+(defun switch-full-screen ()
+    (interactive)
+    (shell-command "wmctrl -r :ACTIVE: -btoggle,fullscreen"))
+
+(global-set-key [f11] 'switch-full-screen)
+
+;;
+;; Oblivion theme ported from Gedit
+;;
+(set-background-color "#2e3436")
+(set-foreground-color "#d3d7cf")
+(set-face-background 'default "#2e3436")
+(set-face-foreground 'default "#d3d7cf")
+(set-cursor-color "#d3d7cf")
+(set-face-background 'highlight "#555753")
+;(set-face-foreground 'linum "#555753")
+;(set-face-background 'linum "#000000")
+(set-face-foreground 'font-lock-comment-face "#888a85")
+(set-face-italic-p 'font-lock-comment-face t)
+(set-face-foreground 'font-lock-doc-face "#888a85")
+(set-face-italic-p 'font-lock-doc-face t)
+(set-face-foreground 'font-lock-constant-face "#e5786d")
+(set-face-foreground 'font-lock-string-face "#edd400")
+(set-face-foreground 'font-lock-variable-name-face "#8ae234")
+(set-face-bold-p 'font-lock-variable-name-face t)
+(set-face-foreground 'font-lock-function-name-face "#729fcf")
+(set-face-foreground 'font-lock-type-face "#8ae234")
+(set-face-foreground 'font-lock-builtin-face "#8ac6f2")
+(set-face-foreground 'font-lock-keyword-face "#ad7fa8")
+(set-face-foreground 'font-lock-preprocessor-face "#e5786d")
+(set-face-foreground 'font-lock-negation-char-face "#e7f6da")
+(set-face-foreground 'link "#8ac6f2")
+(set-face-bold-p 'link t)
+(set-face-underline-p 'link t)
+(set-face-foreground 'show-paren-match "#eeeeec")
+(set-face-background 'show-paren-match "#babdb6")
+(set-face-bold-p 'show-paren-match t)
+(set-face-foreground 'show-paren-mismatch "#eeeeec")
+(set-face-background 'show-paren-mismatch "#babdb6")
+(set-face-foreground 'region "#eeeeec")
+(set-face-background 'region "#888a85")
+(set-face-foreground 'lazy-highlight "black")
+(set-face-background 'lazy-highlight "yellow")
+(set-face-foreground 'fringe "#d3d7cf")
+(set-face-background 'fringe "#2e3436")
+
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+;; '(column-number-mode t)
+;; '(default-input-method "russian-computer")
+)
+ 
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(css-property ((t (:inherit bold :foreground "#ffffff"))))
+ '(css-selector ((t (:foreground "#d3d7cf"))))
+ '(link ((t (:foreground "#ffffff" :underline t :weight normal))))
+ '(mode-line ((((class color) (min-colors 88)) (:background "#ffffff" :foreground "black"))))
+ '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) nil)))
+ '(mumamo-background-chunk-submode1 ((t nil)))
+ '(mumamo-background-chunk-submode2 ((((class color) (min-colors 88) (background dark)) nil)))
+ '(mumamo-background-chunk-submode3 ((((class color) (min-colors 88) (background dark)) nil)))
+ '(mumamo-background-chunk-submode4 ((((class color) (min-colors 88) (background dark)) nil)))
+ '(nxml-delimiter ((t (:foreground "#729fcf"))) t)
+ '(nxml-processing-instruction-target ((t (:inherit nxml-delimited-data))))
+)
+
