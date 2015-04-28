@@ -20,6 +20,7 @@ remoterepository = user@domain1.com-remote
 type = Maildir
 # Where should the mail be placed?
 localfolders = ~/Mail/user@domain1.com
+nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
 
 [Repository user@domain1.com-remote]
 # Remote repos can be IMAP or Gmail, the latter being a preconfigured IMAP
@@ -44,6 +45,7 @@ remoterepository = user@domain2.com-remote
 type = Maildir
 # Where should the mail be placed?
 localfolders = ~/Mail/user@domain2.com
+nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
 
 [Repository user@domain2.com-remote]
 type = IMAP
@@ -67,6 +69,7 @@ remoterepository = user@domain3.com-remote
 type = Maildir
 # Where should the mail be placed?
 localfolders = ~/Mail/user@domain3.com
+nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
 
 [Repository user@domain3.com-remote]
 type = IMAP
