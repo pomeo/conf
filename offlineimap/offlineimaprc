@@ -35,6 +35,9 @@ nametrans = lambda foldername: re.sub ('^\[Gmail\]', '',
                                re.sub ('Starred', 'Flagged', foldername)))
 nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
 folderfilter = lambda foldername: foldername not in '[Gmail]/All Mail'
+maxconnections = 1
+keepalive = 10
+holdconnectionopen = yes
 
 [Account user@domain2.com]
 localrepository = user@domain2.com-local
@@ -59,6 +62,9 @@ nametrans = lambda foldername: re.sub ('^\[Gmail\]', '',
                                re.sub ('Starred', 'Flagged', foldername)))
 nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
 folderfilter = lambda foldername: foldername not in '[Gmail]/All Mail'
+maxconnections = 1
+keepalive = 10
+holdconnectionopen = yes
 
 [Account user@domain3.com]
 localrepository = user@domain3.com-local
@@ -83,3 +89,6 @@ nametrans = lambda foldername: re.sub ('^\[Gmail\]', '',
                                re.sub ('Starred', 'Flagged', foldername)))
 nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
 folderfilter = lambda foldername: foldername not in '[Gmail]/All Mail'
+maxconnections = 1
+keepalive = 10
+holdconnectionopen = yes
