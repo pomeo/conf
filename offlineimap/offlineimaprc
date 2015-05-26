@@ -20,6 +20,7 @@ remoterepository = user@domain1.com-remote
 type = Maildir
 # Where should the mail be placed?
 localfolders = ~/Mail/user@domain1.com
+nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
 
 [Repository user@domain1.com-remote]
 # Remote repos can be IMAP or Gmail, the latter being a preconfigured IMAP
@@ -34,6 +35,9 @@ nametrans = lambda foldername: re.sub ('^\[Gmail\]', '',
                                re.sub ('Starred', 'Flagged', foldername)))
 nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
 folderfilter = lambda foldername: foldername not in '[Gmail]/All Mail'
+maxconnections = 1
+keepalive = 10
+holdconnectionopen = yes
 
 [Account user@domain2.com]
 localrepository = user@domain2.com-local
@@ -44,6 +48,7 @@ remoterepository = user@domain2.com-remote
 type = Maildir
 # Where should the mail be placed?
 localfolders = ~/Mail/user@domain2.com
+nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
 
 [Repository user@domain2.com-remote]
 type = IMAP
@@ -57,6 +62,9 @@ nametrans = lambda foldername: re.sub ('^\[Gmail\]', '',
                                re.sub ('Starred', 'Flagged', foldername)))
 nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
 folderfilter = lambda foldername: foldername not in '[Gmail]/All Mail'
+maxconnections = 1
+keepalive = 10
+holdconnectionopen = yes
 
 [Account user@domain3.com]
 localrepository = user@domain3.com-local
@@ -67,6 +75,7 @@ remoterepository = user@domain3.com-remote
 type = Maildir
 # Where should the mail be placed?
 localfolders = ~/Mail/user@domain3.com
+nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
 
 [Repository user@domain3.com-remote]
 type = IMAP
@@ -80,3 +89,6 @@ nametrans = lambda foldername: re.sub ('^\[Gmail\]', '',
                                re.sub ('Starred', 'Flagged', foldername)))
 nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
 folderfilter = lambda foldername: foldername not in '[Gmail]/All Mail'
+maxconnections = 1
+keepalive = 10
+holdconnectionopen = yes
